@@ -22,6 +22,9 @@ module.exports = (RED) => {
           }
         });
       });
+      if (asset.imdb.rating !== 'N/A') {
+        asset.title += ` (${asset.imdb.rating})`;
+      }
       node.send(msg);
     });
   });
