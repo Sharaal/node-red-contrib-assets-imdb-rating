@@ -5,11 +5,11 @@ module.exports = (RED) => {
     RED.nodes.createNode(this, config);
     const node = this;
     node.on('input', async (msg) => {
-      if (!msg.payload.title) {
+      const asset = msg.payload;
+      if (!asset.title) {
         node.warn('no title in the payload');
         return;
       }
-      const asset = msg.payload;
       asset.imdb = await new Promise((resolve) => {
         const originalTitle = asset.title
           .replace(' (Hot from the US)', '')
