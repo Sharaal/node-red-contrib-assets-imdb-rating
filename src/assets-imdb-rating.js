@@ -7,7 +7,7 @@ module.exports = (RED) => {
     node.status({});
 
     node.on('input', async (msg) => {
-      node.status({ fill: 'grey', shape: 'dot', text: `requesting...` });
+      node.status({ fill: 'grey', shape: 'dot', text: 'requesting...' });
       const assets = msg.payload;
 
       if (!Array.isArray(assets)) {
@@ -21,22 +21,21 @@ module.exports = (RED) => {
           assets
             .filter(asset => asset.title)
             .map(asset => new Promise((resolve) => {
-                const originalTitle = asset.title
-                  .replace(' (Hot from the US)', '')
-                  .replace(/ \(Season .*\)/, '');
-                imdb.get(originalTitle, (err, data) => {
-                  if (err) {
-                    asset.imdb = { rating: 'N/A' };
-                  } else {
-                    asset.imdb = { rating: data.rating };
-                  }
-                  if (asset.imdb.rating !== 'N/A') {
-                    asset.title += ` (${asset.imdb.rating})`;
-                  }
-                  resolve();
-                });
-              })
-            )
+              const originalTitle = asset.title
+                .replace(' (Hot from the US)', '')
+                .replace(/ \(Season .*\)/, '');
+              imdb.get(originalTitle, (err, data) => {
+                if (err) {
+                  asset.imdb = { rating: 'N/A' };
+                } else {
+                  asset.imdb = { rating: data.rating };
+                }
+                if (asset.imdb.rating !== 'N/A') {
+                  asset.title += ` (${asset.imdb.rating})`;
+                }
+                resolve();
+              });
+            })),
         );
         node.status({});
       } catch (e) {
