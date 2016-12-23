@@ -9,12 +9,9 @@ module.exports = DNode.createNode('assets-imdb-rating', (dnode) => {
     }
     await Promise.all(
       assets
-        .filter(asset => asset.title)
+        .filter(asset => asset.searchTitle || asset.title)
         .map(asset => new Promise((resolve) => {
-          const originalTitle = asset.title
-            .replace(' (Hot from the US)', '')
-            .replace(/ \(Season .*\)/, '');
-          imdb.get(originalTitle, (err, data) => {
+          imdb.get(asset.searchTitle || asset.title, (err, data) => {
             if (err) {
               asset.imdb = { rating: 'N/A' };
             } else {
